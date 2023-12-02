@@ -1,9 +1,9 @@
+import { Card, Input, Option, Select, Button } from "@material-tailwind/react";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/authContext";
-import { Select, Option } from "@material-tailwind/react";
 
 const Registration = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ const Registration = () => {
   const { state } = useLocation();
   const from = state?.from || "/";
 
-  const { Registration, GoogleSignIn } = useAuth();
+  const { Registration, GoogleSignIn, updateUserProfile } = useAuth();
 
   const handlePasswordVisibilityChange = () => {
     setIsVisible((visible) => !visible);
@@ -27,6 +27,10 @@ const Registration = () => {
     setEmail(e.target.value);
   };
 
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -34,12 +38,6 @@ const Registration = () => {
   const handleGoogleLogin = () => {
     GoogleSignIn()
       .then(async (res) => {
-        const imgBBResponse = await uploadToImgBB(profilePicture);
-
-        // Call Registration API with all data
-        await Registration(email.trim(), password);
-
-        // Call MongoDB API to store user data along with imgBB link
         await fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
           method: "POST",
           headers: {
@@ -48,8 +46,7 @@ const Registration = () => {
           body: JSON.stringify({
             email,
             username,
-            profilePicture: imgBBResponse.data.url,
-            type: selectedVersion,
+            type: "user",
           }),
         });
 
@@ -81,15 +78,27 @@ const Registration = () => {
 
     Registration(email.trim(), password)
       .then(async (res) => {
-        await fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, username }),
+        const ImgBBUrl = await uploadToImgBB(profilePicture);
+
+        console.log(ImgBBUrl)
+
+        updateUserProfile(username, ImgBBUrl.data.url).then(() => {
+          fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              username,
+              type: selectedVersion,
+            }),
+          });
+
+          toast.success("Successful log in");
         });
-        toast.success("Successful log in");
-        navigate(from, { replace: true });
+
+        //navigate(from, { replace: true });
       })
       .catch((err) => {
         toast.error(err.message);
@@ -111,7 +120,7 @@ const Registration = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen mx-auto mt-5 md:mt-0">
-      <div className="card flex justify-center shadow-xl md:min-h-[80vh] md:w-[90%] mx-2 rounded-lg w-full border-2">
+      <Card className="flex justify-center shadow-xl md:min-h-[80vh] md:w-[90%] mx-2 rounded-lg w-full border-2">
         <div className="flex flex-col-reverse md:flex-row justify-center items- mx-2">
           <form
             className="w-full md:w-1/2 flex flex-col items-start lg:pl-32 md:pl-16 gap-4"
@@ -120,29 +129,42 @@ const Registration = () => {
             <p className="text-3xl lg:text-5xl font-extrabold mb-4">
               Registration
             </p>
+            <div className="w-full max-w-sm">
+              <Input
+                id="username"
+                label="Username"
+                required
+                type="text"
+                value={username}
+                onChange={handleUsernameChange}
+                className="py-2 rounded-lg border-gray-300 max-w-sm"
+              />
+            </div>
 
-            <input
-              id="email1"
-              placeholder="Email"
-              required
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              className="input w-full max-w-sm  py-2 rounded-lg border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500"
-            />
-
-            <div className="w-full max-w-xs lg:max-w-sm py-2 rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500 relative">
-              <input
+            <div className="w-full max-w-sm">
+              <Input
+                id="email1"
+                label="Email"
+                required
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                className="py-2 rounded-lg border-gray-300 max-w-sm"
+              />
+            </div>
+            <div className="w-full max-w-sm">
+              <Input
                 id="password1"
-                placeholder="Password"
+                label="Password"
                 required
                 type={isVisible ? "text" : "password"}
                 value={password}
                 onChange={handlePasswordChange}
-                className="input w-full py-2 rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500"
+                className="py-2 rounded-lg border-gray-300 max-w-sm"
               />
             </div>
 
+            <label htmlFor="profilePicture">ProfilePicture</label>
             <input
               type="file"
               accept="image/*"
@@ -161,12 +183,12 @@ const Registration = () => {
               </Select>
             </div>
 
-            <button
+            <Button
               type="submit"
               className="btn w-32 self-center md:self-start"
             >
               Register
-            </button>
+            </Button>
             <div className="border-b-2 w-full max-w-xs lg:max-w-sm"></div>
             <p className="text-lg">Or login with</p>
             <FcGoogle
@@ -192,7 +214,7 @@ const Registration = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

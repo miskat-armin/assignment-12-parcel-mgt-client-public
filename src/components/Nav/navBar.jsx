@@ -8,7 +8,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 import { IoIosNotificationsOutline } from "react-icons/io";
 
-import { Avatar } from "@material-tailwind/react";
+import { Avatar, Button } from "@material-tailwind/react";
 
 import {
   Menu,
@@ -51,6 +51,7 @@ const Header = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
+              fillRule="evenodd"
               d={
                 isMobileMenuOpen
                   ? "M6 18L18 6M6 6l12 12"
@@ -84,7 +85,7 @@ const Header = () => {
               <Menu>
                 <MenuHandler>
                   <Avatar
-                    src={user.photoURL}
+                    src={user?.photoURL}
                     alt={
                       user?.displayName?.substr(0, 1).toUpperCase() ||
                       user?.email?.substr(0, 1).toUpperCase()
@@ -109,7 +110,7 @@ const Header = () => {
                       Dashboard
                     </button>
                   </MenuItem>
-                  <MenuItem onClick={Logout}>
+                  <MenuItem onClick={Logout} className="flex items-center">
                     <IoLogOutOutline className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </MenuItem>
@@ -117,10 +118,10 @@ const Header = () => {
               </Menu>
             </div>
           ) : (
-            <Link to="/signin" className="hidden lg:block">
-              <button className="btn w-32 bg-[#7373E3] hover:bg-[#4D4DDB]  hover:scale-105 transform transition duration-500">
-                <p className="text-white font-semibold text-lg">Login</p>
-              </button>
+            <Link to="/signin" className="hidden lg:block my-0.5">
+              <Button size="md" className="btn bg-[#7373E3] hover:bg-[#4D4DDB]  hover:scale-105 transform transition duration-500">
+                Login
+              </Button>
             </Link>
           )}
           <IoIosNotificationsOutline size={32} />
