@@ -5,6 +5,7 @@ const Banner = () => {
   const [search, setSearch] = useState("");
   const onChange = ({ target }) => setSearch(target.value);
 
+
   return (
     <div className="hero-section relative h-screen flex items-center justify-center">
       <div className="absolute inset-0 bg-cover bg-opacity-50 z-[-1]">

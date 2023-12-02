@@ -3,11 +3,14 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/authContext";
+import { Select, Option } from "@material-tailwind/react";
 
 const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [selectedVersion, setSelectedVersion] = useState("User");
   const [isVisible, setIsVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -31,6 +34,12 @@ const Registration = () => {
   const handleGoogleLogin = () => {
     GoogleSignIn()
       .then(async (res) => {
+        const imgBBResponse = await uploadToImgBB(profilePicture);
+
+        // Call Registration API with all data
+        await Registration(email.trim(), password);
+
+        // Call MongoDB API to store user data along with imgBB link
         await fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
           method: "POST",
           headers: {
@@ -38,9 +47,12 @@ const Registration = () => {
           },
           body: JSON.stringify({
             email,
-            username: res.user.displayName || username,
+            username,
+            profilePicture: imgBBResponse.data.url,
+            type: selectedVersion,
           }),
         });
+
         toast.success("Successful Registration");
         navigate(from, { replace: true });
       })
@@ -84,6 +96,19 @@ const Registration = () => {
       });
   };
 
+  const uploadToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    return await fetch(
+      "https://api.imgbb.com/1/upload?key=afc8c694e18a5ea37d748c1c5bc84eac",
+      {
+        method: "POST",
+        body: formData,
+      }
+    ).then((res) => res.json());
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen mx-auto mt-5 md:mt-0">
       <div className="card flex justify-center shadow-xl md:min-h-[80vh] md:w-[90%] mx-2 rounded-lg w-full border-2">
@@ -116,6 +141,24 @@ const Registration = () => {
                 onChange={handlePasswordChange}
                 className="input w-full py-2 rounded-md border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500"
               />
+            </div>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setProfilePicture(e.target.files[0])}
+              className="py-2 rounded-lg border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500"
+            />
+
+            <div className="w-72">
+              <Select
+                label="Select Version"
+                value={selectedVersion}
+                onChange={(value) => setSelectedVersion(value)}
+              >
+                <Option value="User">User</Option>
+                <Option value="DeliveryMen">DeliveryMen</Option>
+              </Select>
             </div>
 
             <button

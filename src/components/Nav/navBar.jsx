@@ -6,15 +6,16 @@ import NavLinkItem from "./NavBarLinkItem";
 
 import { IoLogOutOutline } from "react-icons/io5";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../Custom/avatar";
 import { IoIosNotificationsOutline } from "react-icons/io";
 
+import { Avatar } from "@material-tailwind/react";
+
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../Custom/dropdown-menu";
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+} from "@material-tailwind/react";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -80,33 +81,40 @@ const Header = () => {
         <div className="flex items-center">
           {user ? (
             <div className="ml-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar className="cursor-pointer">
-                    <AvatarImage src={user.photoURL} alt={user?.displayName} />
-                    <AvatarFallback>DP</AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
+              <Menu>
+                <MenuHandler>
+                  <Avatar
+                    src={user.photoURL}
+                    alt={
+                      user?.displayName?.substr(0, 1).toUpperCase() ||
+                      user?.email?.substr(0, 1).toUpperCase()
+                    }
+                    withBorder={true}
+                    className="p-0.5 my-1 cursor-pointer"
+                    size="sm"
+                    c
+                  />
+                </MenuHandler>
+                <MenuList>
+                  <MenuItem>
                     {user?.displayName && (
                       <span className="block text-sm">{user?.displayName}</span>
                     )}
                     <span className="block truncate text-sm font-medium">
                       {user.email}
                     </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  </MenuItem>
+                  <MenuItem>
                     <button onClick={() => navigate("/dashboard")}>
                       Dashboard
                     </button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={Logout}>
+                  </MenuItem>
+                  <MenuItem onClick={Logout}>
                     <IoLogOutOutline className="mr-2 h-4 w-4" />
                     <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </div>
           ) : (
             <Link to="/signin" className="hidden lg:block">
@@ -115,7 +123,7 @@ const Header = () => {
               </button>
             </Link>
           )}
-          <IoIosNotificationsOutline size={24}/>
+          <IoIosNotificationsOutline size={32} />
         </div>
       </div>
 
