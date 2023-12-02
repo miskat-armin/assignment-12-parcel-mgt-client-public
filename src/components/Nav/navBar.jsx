@@ -6,7 +6,7 @@ import NavLinkItem from "./NavBarLinkItem";
 
 import { IoLogOutOutline } from "react-icons/io5";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../Custom/avatar";
 import { IoIosNotificationsOutline } from "react-icons/io";
 
 import {
@@ -14,7 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../Custom/dropdown-menu";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
