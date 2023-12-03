@@ -4,9 +4,11 @@ import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
   return (
-    <div className="flex">
+    <div className="flex flex-row">
       <DefaultSidebar />
-      <Outlet></Outlet>
+      <div className="flex-1 p-8">
+        <Outlet></Outlet>
+      </div>
     </div>
   );
 };

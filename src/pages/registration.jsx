@@ -193,8 +193,8 @@ const Registration = () => {
                 value={selectedVersion}
                 onChange={(value) => setSelectedVersion(value)}
               >
-                <Option value="User">User</Option>
-                <Option value="DeliveryMen">DeliveryMen</Option>
+                <Option value="user">User</Option>
+                <Option value="deliveryMen">DeliveryMen</Option>
               </Select>
             </div>
 
