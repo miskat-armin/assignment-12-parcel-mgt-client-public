@@ -27,8 +27,6 @@ const Header = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  console.log(user);
-
   return (
     <header className="shadow-lg sticky top-0 w-full bg-white lg:bg-opacity-60 z-50">
       <div className="mx-auto flex lg:justify-between items-center px-4 md:px-10">
@@ -93,7 +91,6 @@ const Header = () => {
                     withBorder={true}
                     className="p-0.5 my-1 cursor-pointer"
                     size="sm"
-                    c
                   />
                 </MenuHandler>
                 <MenuList>
@@ -105,10 +102,8 @@ const Header = () => {
                       {user.email}
                     </span>
                   </MenuItem>
-                  <MenuItem>
-                    <button onClick={() => navigate("/dashboard")}>
+                  <MenuItem onClick={() => navigate("/dashboard")}>
                       Dashboard
-                    </button>
                   </MenuItem>
                   <MenuItem onClick={Logout} className="flex items-center">
                     <IoLogOutOutline className="mr-2 h-4 w-4" />

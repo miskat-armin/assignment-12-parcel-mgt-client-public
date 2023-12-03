@@ -4,6 +4,8 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/authContext";
+import useAxiosPublic from "../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 const Registration = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +14,8 @@ const Registration = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [selectedVersion, setSelectedVersion] = useState("User");
   const [isVisible, setIsVisible] = useState(false);
+
+  const axiosPublic = useAxiosPublic();
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -80,7 +84,7 @@ const Registration = () => {
       .then(async (res) => {
         const ImgBBUrl = await uploadToImgBB(profilePicture);
 
-        console.log(ImgBBUrl)
+        console.log(ImgBBUrl);
 
         updateUserProfile(username, ImgBBUrl.data.url).then(() => {
           fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
@@ -93,9 +97,20 @@ const Registration = () => {
               username,
               type: selectedVersion,
             }),
-          });
-
-          toast.success("Successful log in");
+          })
+            .then((data) => data.json())
+            .then((res) => {
+              if (res.data.insertedId) {
+                console.log("user added to the database");
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "User created successfully.",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              }
+            });
         });
 
         //navigate(from, { replace: true });

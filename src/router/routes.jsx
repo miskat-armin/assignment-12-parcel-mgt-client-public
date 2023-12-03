@@ -4,7 +4,8 @@ import ErrorPage from "../pages/errorPage.jsx";
 import Home from "../pages/home";
 import Registration from "../pages/registration.jsx";
 import Signin from "../pages/signin.jsx";
-import Dashboard from "../pages/dashboard.jsx";
+import PrivateRoute from "./PrivateRoute.jsx";
+import Dashboard from "../layout/dashboard.jsx";
 
 const CustomRouter = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const CustomRouter = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home></Home>,
+        element: <PrivateRoute><Home/></PrivateRoute>,
       },
       {
         path: "/signin",
@@ -23,13 +24,19 @@ const CustomRouter = createBrowserRouter([
       {
         path: "/registration",
         element: <Registration />,
-      },
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
+      }
     ],
   },
+  {
+    path: 'dashboard',
+    element: <PrivateRoute><Dashboard/></PrivateRoute>,
+    errorElement: <ErrorPage/>,
+    children: [
+      {
+        
+      }
+    ]
+  }
 ]);
 
 export default CustomRouter;

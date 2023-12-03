@@ -59,24 +59,25 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-
         const userInfo = { email: user.email };
-        axiosPublic.post("/jwt", userInfo).then((res) => {
+        axiosPublic.post(import.meta.env.VITE_EXPRESS_API + "/jwt", userInfo).then((res) => {
           if (res.data.token) {
             localStorage.setItem("access-token", res.data.token);
+            setLoading(false);
           }
         });
       } else {
         localStorage.removeItem("access-token");
         setUser(null);
+        setLoading(false);
       }
-      setLoading(false);
+      
     });
 
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [axiosPublic]);
 
   const AuthInfo = {
     user,
