@@ -30,7 +30,23 @@ const Signin = () => {
 
   const handleGoogleLogin = () => {
     GoogleSignIn()
-      .then((res) => {
+      .then(async(res) => {
+        await fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: res.user.email,
+            username: res.user.displayName,
+            type: "user",
+            phone: "",
+            image: res.user.photoURL,
+          }),
+        });
+
+        toast.success("Successful Registration");
+        navigate(from, { replace: true });
         toast.success("Successful log in");
         navigate(from, { replace: true });
       })

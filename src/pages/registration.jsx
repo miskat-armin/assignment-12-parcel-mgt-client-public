@@ -53,9 +53,11 @@ const Registration = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email,
-            username,
+            email: res.user.email,
+            username: res.user.displayName,
             type: "user",
+            phone: "",
+            image: res.user.photoURL,
           }),
         });
 
@@ -89,8 +91,6 @@ const Registration = () => {
       .then(async (res) => {
         const ImgBBUrl = await uploadToImgBB(profilePicture);
 
-        console.log(ImgBBUrl);
-
         updateUserProfile(username, ImgBBUrl.data.url).then(() => {
           fetch(import.meta.env.VITE_EXPRESS_API + "/users/create-user", {
             method: "POST",
@@ -102,7 +102,7 @@ const Registration = () => {
               username,
               type: selectedVersion,
               phone: phoneNumber,
-              image: ImgBBUrl.data.url
+              image: ImgBBUrl.data.url,
             }),
           })
             .then((data) => data.json())
