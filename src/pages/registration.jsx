@@ -102,7 +102,7 @@ const Registration = () => {
               username,
               type: selectedVersion,
               phone: phoneNumber,
-              image: ImgBBUrl
+              image: ImgBBUrl.data.url
             }),
           })
             .then((data) => data.json())
