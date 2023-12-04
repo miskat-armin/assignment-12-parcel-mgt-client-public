@@ -1,15 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import ReviewModal from "../dialog/reviewModal";
+import { useAuth } from "../../context/authContext";
 
 const ParcelsTable = ({ parcels }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedParcelId, setSelectedParcelId] = useState(null);
+
+  const handleReview = (parcelId) => {
+    setSelectedParcelId(parcelId);
+    setShowReviewModal(true);
+  };
+
+  const handleCloseReviewModal = () => {
+    setSelectedParcelId(null);
+    setShowReviewModal(false);
+  };
+
+  const handleReviewSubmit = (reviewData) => {
+    axiosSecure
+      .post(
+        import.meta.env.VITE_EXPRESS_API +
+          `/reviews/post-review/${user?.email}`,
+        {...reviewData, userPhoto: user?.photoURL}
+      )
+      .then((res) => {
+        console.log(res.data)
+        if (res.data.success) toast.success("Review submitted");
+        else toast.error("Already submitted")
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleCancel = (id) => {
-    // Display SweetAlert2 confirmation prompt
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -19,7 +51,6 @@ const ParcelsTable = ({ parcels }) => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, cancel it!",
     }).then((result) => {
-      // If the user clicks 'Yes', proceed with the deletion
       if (result.isConfirmed) {
         axiosSecure
           .put(
@@ -55,8 +86,8 @@ const ParcelsTable = ({ parcels }) => {
               new Date(parcel.requestedDeliveryDate).toLocaleDateString("en-GB")
             )}
             {tableCell(
-              parcel.approxDeliveryDate
-                ? new Date(parcel.approxDeliveryDate).toLocaleDateString(
+              parcel.approximateDeliveryDate != null
+                ? new Date(parcel.approximateDeliveryDate).toLocaleDateString(
                     "en-GB"
                   )
                 : "Not fixed"
@@ -64,20 +95,20 @@ const ParcelsTable = ({ parcels }) => {
             {tableCell(
               new Date(parcel.bookingDate).toLocaleDateString("en-GB")
             )}
-            {tableCell(parcel.deliveryMenID || "Not assigned")}
+            {tableCell(parcel.deliverymenId || "Not assigned")}
             {tableCell(parcel.status)}
             <td className="p-4 space-x-2 flex items-center">
-              {parcel.status === "delivered" && (
+              {parcel.status === "Delivered" && (
                 <>
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded"
-                    onClick={() => handleReview(parcel.id)}
+                    onClick={() => handleReview(parcel._id)}
                   >
                     Review
                   </button>
                   <button
                     className="bg-green-500 text-white px-4 py-2 rounded"
-                    onClick={() => handlePay(parcel.id)}
+                    onClick={() => handlePay(parcel._id)}
                   >
                     Pay
                   </button>
@@ -107,6 +138,18 @@ const ParcelsTable = ({ parcels }) => {
           </tr>
         ))}
       </tbody>
+
+      <ReviewModal
+        show={showReviewModal}
+        handleClose={handleCloseReviewModal}
+        deliveryMenId={
+          selectedParcelId
+            ? parcels.find((parcel) => parcel._id === selectedParcelId)
+                .deliverymenId
+            : null
+        }
+        onSubmit={handleReviewSubmit}
+      />
     </table>
   );
 };

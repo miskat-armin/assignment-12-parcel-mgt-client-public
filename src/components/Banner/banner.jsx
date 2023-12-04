@@ -15,7 +15,7 @@ const Banner = () => {
         />
       </div>
       <div className="text-center text-white z-10">
-        <h1 className="text-4xl md:text-8xl font-bold mb-4">Your Hero Title</h1>
+        <h1 className="text-4xl md:text-8xl font-bold mb-4">Elevating Logistics Efficiency with Seamless Parcel Management</h1>
         <div className="mx-auto max-w-md">
           <div className="relative flex w-full max-w-[24rem]">
             <Input

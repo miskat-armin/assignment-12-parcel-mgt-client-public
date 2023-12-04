@@ -9,11 +9,12 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
-import { toast} from 'react-toastify'
+import { toast } from "react-toastify";
 
 const AllParcels = () => {
   const axiosSecure = useAxiosSecure();
   const [parcels, setParcels] = useState([]);
+  const [deliveryMenList, setDeliveryMenList] = useState([]);
   const [selectedParcel, setSelectedParcel] = useState(null);
   const [selectedDeliveryman, setSelectedDeliveryman] = useState("");
   const [approximateDeliveryDate, setApproximateDeliveryDate] = useState("");
@@ -26,6 +27,12 @@ const AllParcels = () => {
       })
       .catch((error) => {
         console.error("Error fetching all parcels:", error);
+      });
+
+    axiosSecure
+      .get(import.meta.env.VITE_EXPRESS_API + "/users/get-delivery-men-list")
+      .then((res) => {
+        setDeliveryMenList(res.data);
       });
   };
 
@@ -51,7 +58,7 @@ const AllParcels = () => {
         setSelectedParcel(null);
         setSelectedDeliveryman("");
         setApproximateDeliveryDate("");
-        toast.success("updated")
+        toast.success("updated");
       })
       .catch((error) => {
         toast.error("Error assigning delivery:", error);
@@ -115,9 +122,6 @@ const AllParcels = () => {
         <Dialog open={true} handler={() => setSelectedParcel(null)}>
           <DialogHeader>Manage Parcel</DialogHeader>
           <DialogBody>
-            {/* ... existing code ... */}
-
-            {/* Add select field for deliveryman and date input field */}
             <div className="form-group">
               <label>Select Deliveryman:</label>
               <select
@@ -125,9 +129,15 @@ const AllParcels = () => {
                 value={selectedDeliveryman}
                 onChange={(e) => setSelectedDeliveryman(e.target.value)}
               >
-                <option value="deliveryman1">Deliveryman 1</option>
-                <option value="deliveryman2">Deliveryman 2</option>
-                {/* Add more options as needed */}
+                <option value="">Select Deliveryman</option>
+                {deliveryMenList &&
+                  deliveryMenList.map((deliveryMen) => {
+                    return (
+                      <option key={deliveryMen._id} value={deliveryMen._id}>
+                        {deliveryMen.username}
+                      </option>
+                    );
+                  })}
               </select>
             </div>
 
@@ -144,12 +154,12 @@ const AllParcels = () => {
           <DialogFooter>
             <Button
               variant="text"
-              color="secondary"
+              color="red"
               onClick={() => setSelectedParcel(null)}
             >
               <span>Cancel</span>
             </Button>
-            <Button variant="gradient" color="primary" onClick={handleAssign}>
+            <Button variant="gradient" color="indigo" onClick={handleAssign}>
               <span>Assign</span>
             </Button>
           </DialogFooter>

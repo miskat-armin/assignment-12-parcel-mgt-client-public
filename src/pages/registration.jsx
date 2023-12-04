@@ -11,6 +11,7 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
   const [selectedVersion, setSelectedVersion] = useState("User");
   const [isVisible, setIsVisible] = useState(false);
@@ -22,6 +23,10 @@ const Registration = () => {
   const from = state?.from || "/";
 
   const { Registration, GoogleSignIn, updateUserProfile } = useAuth();
+
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
 
   const handlePasswordVisibilityChange = () => {
     setIsVisible((visible) => !visible);
@@ -96,6 +101,8 @@ const Registration = () => {
               email,
               username,
               type: selectedVersion,
+              phone: phoneNumber,
+              image: ImgBBUrl
             }),
           })
             .then((data) => data.json())
@@ -113,7 +120,7 @@ const Registration = () => {
             });
         });
 
-        //navigate(from, { replace: true });
+        navigate(from, { replace: true });
       })
       .catch((err) => {
         toast.error(err.message);
@@ -198,6 +205,18 @@ const Registration = () => {
               </Select>
             </div>
 
+            <div className="w-full max-w-sm">
+              <Input
+                id="phoneNumber"
+                label="Phone Number"
+                required
+                type="tel"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                className="py-2 rounded-lg border-gray-300 max-w-sm"
+              />
+            </div>
+
             <Button
               type="submit"
               className="btn w-32 self-center md:self-start"
@@ -213,7 +232,7 @@ const Registration = () => {
             />
 
             <Link
-              to={"/login"}
+              to={"/signin"}
               className="md:hidden self-center text-blue-500 underline"
             >
               Already logged in?
@@ -222,7 +241,7 @@ const Registration = () => {
           <div className="w-full md:w-1/2 px-4 flex flex-col items-center mb-10 md:mb-0 mt-10 md:mt-0">
             <img src="/Signup.svg" alt="signup" className="lg:w-[90%]" />
             <Link
-              to={"/login"}
+              to={"/signin"}
               className="hidden md:block mt-5 text-blue-500 underline"
             >
               Already logged in?
