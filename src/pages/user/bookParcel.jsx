@@ -1,9 +1,8 @@
-import React from 'react'
+import BookingForm from "../../components/Form/bookingForm";
 
-const BookParcel = () => {
+ 
+export default function BookParcel() {
   return (
-    <div>BookParcel</div>
-  )
+    <BookingForm />
+  );
 }
-
-export default BookParcel

@@ -18,6 +18,7 @@ import AdminRoute from "./AdminRoute.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import DeliveryRoute from "./deliveryRoute.jsx";
 import UserRoute from "./userRoute.jsx";
+import UpdateBooking from "../pages/user/updateBooking.jsx";
 
 const CustomRouter = createBrowserRouter([
   {
@@ -70,6 +71,15 @@ const CustomRouter = createBrowserRouter([
         element: (
           <UserRoute>
             <MyParcel />
+          </UserRoute>
+        ),
+      },
+
+      {
+        path: "updateBooking",
+        element: (
+          <UserRoute>
+            <UpdateBooking />
           </UserRoute>
         ),
       },

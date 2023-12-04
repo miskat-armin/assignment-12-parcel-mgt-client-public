@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <header className="shadow-lg sticky top-0 w-full bg-white lg:bg-opacity-60 z-50">
       <div className="mx-auto flex lg:justify-between items-center px-4 md:px-10">
-        <h1 className="text-2xl font-semibold lg:block hidden">Your Logo</h1>
+        <h1 className="text-2xl font-semibold lg:block hidden text-teal-600">PICKMEUP</h1>
         {/* Hamburger menu button for mobile */}
         <button
           onClick={toggleMobileMenu}
@@ -103,7 +103,7 @@ const Header = () => {
                     </span>
                   </MenuItem>
                   <MenuItem onClick={() => navigate("/dashboard")}>
-                      Dashboard
+                    Dashboard
                   </MenuItem>
                   <MenuItem onClick={Logout} className="flex items-center">
                     <IoLogOutOutline className="mr-2 h-4 w-4" />
@@ -114,7 +114,10 @@ const Header = () => {
             </div>
           ) : (
             <Link to="/signin" className="hidden lg:block my-0.5">
-              <Button size="md" className="btn bg-[#7373E3] hover:bg-[#4D4DDB]  hover:scale-105 transform transition duration-500">
+              <Button
+                size="md"
+                className="btn bg-[#7373E3] hover:bg-[#4D4DDB]  hover:scale-105 transform transition duration-500"
+              >
                 Login
               </Button>
             </Link>
@@ -131,10 +134,7 @@ const Header = () => {
               <NavLinkItem to="/" label="Home" />
             </li>
             <li>
-              <NavLinkItem to="/all-items" label="All items" />
-            </li>
-            <li>
-              <NavLinkItem to="/blog" label="Blog" />
+              <NavLinkItem to="/dashboard" label="Dashboard" />
             </li>
             {user && (
               <li>

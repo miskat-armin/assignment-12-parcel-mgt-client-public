@@ -48,7 +48,7 @@ export function DefaultSidebar() {
               </ListItemPrefix>
               My parcel
             </ListItem>
-            <ListItem onClick={() => navigate("/dashboard/myParcelProfile")}>
+            <ListItem onClick={() => navigate("/dashboard/myProfile")}>
               <ListItemPrefix>
                 <UserCircleIcon className="h-5 w-5" />
               </ListItemPrefix>
@@ -56,6 +56,10 @@ export function DefaultSidebar() {
             </ListItem>
           </>
         ) : (
+          ""
+        )}
+        {type === "deliveryMen" &&
+         (
           <>
             <ListItem onClick={() => navigate("/dashboard/deliveryList")}>
               <ListItemPrefix>
@@ -103,7 +107,7 @@ export function DefaultSidebar() {
         )}
 
         <>
-        <hr className="my-2 border-blue-gray-50" />e
+          <hr className="my-2 border-blue-gray-50" />
           <ListItem onClick={() => navigate("/")}>
             <ListItemPrefix>
               <Cog6ToothIcon className="h-5 w-5" />
